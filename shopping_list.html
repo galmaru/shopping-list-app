@@ -213,7 +213,7 @@
     // Supabase 클라이언트 초기화
     const SUPABASE_URL = 'https://vujupogzrnmntvogovic.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1anVwb2d6cm5tbnR2b2dvdmljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MDI5MzcsImV4cCI6MjA4OTQ3ODkzN30.nMX5rZpUc7hhDvXQIcHsHRuohXzm9So_KH-MAKRZy-g';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let items = []; // { id, name, checked, created_at }
 
@@ -264,7 +264,7 @@
     // 전체 데이터 불러오기
     async function loadItems() {
       setStatus('불러오는 중...');
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('shopping_items')
         .select('*')
         .order('created_at', { ascending: true });
@@ -287,7 +287,7 @@
       addBtn.disabled = true;
       setStatus('저장 중...');
 
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('shopping_items')
         .insert([{ name, checked: false }])
         .select()
@@ -314,7 +314,7 @@
 
       const newChecked = !item.checked;
 
-      const { error } = await supabase
+      const { error } = await db
         .from('shopping_items')
         .update({ checked: newChecked })
         .eq('id', id);
@@ -332,7 +332,7 @@
 
     // 아이템 삭제
     async function deleteItem(id) {
-      const { error } = await supabase
+      const { error } = await db
         .from('shopping_items')
         .delete()
         .eq('id', id);
@@ -354,7 +354,7 @@
 
       setStatus('삭제 중...');
 
-      const { error } = await supabase
+      const { error } = await db
         .from('shopping_items')
         .delete()
         .in('id', checkedIds);
